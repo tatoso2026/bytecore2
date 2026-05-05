@@ -1,0 +1,550 @@
+<html lang="es"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ByteCore | Tecnologia y E.P.P. en Oruro, Bolivia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600;700&display=swap');
+
+        :root {
+            --byte-blue: #00d2ff;
+            --byte-dark-blue: #0a192f;
+            --byte-black: #020617;
+            --byte-accent: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--byte-black);
+            color: #ffffff;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            padding-top: 80px;
+        }
+
+        .font-tech { font-family: 'Orbitron', sans-serif; }
+
+        .neon-border {
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+            border: 1px solid rgba(0, 210, 255, 0.5);
+        }
+
+        .glass-morphism {
+            background: rgba(10, 25, 47, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #00d2ff, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #00d2ff, #3b82f6);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
+        }
+
+        #adminPanel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 350px;
+            max-height: 85vh;
+            overflow-y: auto;
+            z-index: 3000;
+            display: none;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+        }
+
+        .config-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            z-index: 999;
+            background: #1e293b;
+            color: white;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid #00d2ff;
+        }
+
+        /* Chatbot UI */
+        #chatbot-container {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 320px;
+            height: 450px;
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            background: #0f172a;
+            border: 1px solid #00d2ff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        #chat-trigger {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 2001;
+            background: #00d2ff;
+            color: black;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+        }
+
+        .chat-header { background: #1e293b; padding: 12px; font-weight: bold; border-bottom: 1px solid rgba(0,210,255,0.2); }
+        .chat-box { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #020617; }
+        .msg { padding: 10px 14px; border-radius: 12px; font-size: 13px; max-width: 85%; line-height: 1.4; }
+        .bot { background: #1e293b; color: #e2e8f0; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .user { background: #00d2ff; color: #020617; align-self: flex-end; border-bottom-right-radius: 2px; font-weight: 500; }
+        .chat-input { display: flex; border-top: 1px solid #1e293b; background: #0f172a; padding: 5px; }
+        .chat-input input { flex: 1; padding: 12px; background: transparent; color: white; outline: none; font-size: 13px; }
+        .chat-input button { padding: 0 15px; background: transparent; color: #00d2ff; font-size: 18px; }
+
+        /* Ajustes de Video e Imagen */
+        .video-wrapper { 
+            position: relative; 
+            width: 100%; 
+            height: 400px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            background: #000;
+        }
+        video { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            display: block;
+        }
+        .img-full { object-fit: contain; width: 100%; height: auto; max-height: 100%; transition: opacity 0.3s; }
+        .hero-bg-img { object-fit: cover; }
+
+        /* Estilos Slider Botas */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* Admin Style Updates */
+        .input-path {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0,210,255,0.2);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            width: 100%;
+            font-size: 11px;
+            margin-top: 2px;
+        }
+        .input-path:focus {
+            outline: 1px solid var(--byte-blue);
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.top-0{top:0px}.z-0{z-index:0}.z-10{z-index:10}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-12{margin-bottom:3rem}.mb-16{margin-bottom:4rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.ml-auto{margin-left:auto}.mr-2{margin-right:0.5rem}.mt-4{margin-top:1rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-16{height:4rem}.h-48{height:12rem}.h-\[188px\]{height:188px}.h-\[400px\]{height:400px}.h-\[450px\]{height:450px}.h-\[80px\]{height:80px}.h-full{height:100%}.min-h-\[400px\]{min-height:400px}.min-h-\[calc\(100vh-80px\)\]{min-height:calc(100vh - 80px)}.w-48{width:12rem}.w-auto{width:auto}.w-full{width:100%}.max-w-3xl{max-width:48rem}.max-w-lg{max-width:32rem}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-10{gap:2.5rem}.gap-12{gap:3rem}.gap-2{gap:0.5rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.space-x-8 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(2rem * var(--tw-space-x-reverse));margin-left:calc(2rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-\[2\.5rem\]{border-radius:2.5rem}.rounded-\[2rem\]{border-radius:2rem}.rounded-\[3rem\]{border-radius:3rem}.rounded-full{border-radius:9999px}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-cyan-500\/30{border-color:rgb(6 182 212 / 0.3)}.border-cyan-500\/50{border-color:rgb(6 182 212 / 0.5)}.border-cyan-600\/50{border-color:rgb(8 145 178 / 0.5)}.border-white\/10{border-color:rgb(255 255 255 / 0.1)}.border-white\/5{border-color:rgb(255 255 255 / 0.05)}.bg-black{--tw-bg-opacity:1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.bg-black\/60{background-color:rgb(0 0 0 / 0.6)}.bg-cyan-600\/20{background-color:rgb(8 145 178 / 0.2)}.bg-green-600{--tw-bg-opacity:1;background-color:rgb(22 163 74 / var(--tw-bg-opacity, 1))}.bg-green-700{--tw-bg-opacity:1;background-color:rgb(21 128 61 / var(--tw-bg-opacity, 1))}.bg-slate-900\/10{background-color:rgb(15 23 42 / 0.1)}.bg-slate-900\/20{background-color:rgb(15 23 42 / 0.2)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-zinc-900{--tw-bg-opacity:1;background-color:rgb(24 24 27 / var(--tw-bg-opacity, 1))}.object-contain{object-fit:contain}.p-10{padding:2.5rem}.p-2{padding:0.5rem}.p-4{padding:1rem}.p-6{padding:1.5rem}.px-10{padding-left:2.5rem;padding-right:2.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.px-8{padding-left:2rem;padding-right:2rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-20{padding-top:5rem;padding-bottom:5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pb-2{padding-bottom:0.5rem}.text-center{text-align:center}.text-right{text-align:right}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-\[10px\]{font-size:10px}.text-\[9px\]{font-size:9px}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.uppercase{text-transform:uppercase}.italic{font-style:italic}.leading-tight{line-height:1.25}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-black{--tw-text-opacity:1;color:rgb(0 0 0 / var(--tw-text-opacity, 1))}.text-cyan-400{--tw-text-opacity:1;color:rgb(34 211 238 / var(--tw-text-opacity, 1))}.text-cyan-400\/30{color:rgb(34 211 238 / 0.3)}.text-gray-200{--tw-text-opacity:1;color:rgb(229 231 235 / var(--tw-text-opacity, 1))}.text-gray-300{--tw-text-opacity:1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-yellow-500{--tw-text-opacity:1;color:rgb(234 179 8 / var(--tw-text-opacity, 1))}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-cyan-500\/10:hover{background-color:rgb(6 182 212 / 0.1)}.hover\:bg-cyan-600:hover{--tw-bg-opacity:1;background-color:rgb(8 145 178 / var(--tw-bg-opacity, 1))}.hover\:bg-green-500:hover{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.hover\:bg-green-600:hover{--tw-bg-opacity:1;background-color:rgb(22 163 74 / var(--tw-bg-opacity, 1))}.hover\:text-cyan-400:hover{--tw-text-opacity:1;color:rgb(34 211 238 / var(--tw-text-opacity, 1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}@media (min-width: 640px){.sm\:flex-row{flex-direction:row}}@media (min-width: 768px){.md\:flex{display:flex}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:text-8xl{font-size:6rem;line-height:1}}@media (min-width: 1024px){.lg\:col-span-1{grid-column:span 1 / span 1}.lg\:col-span-2{grid-column:span 2 / span 2}.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:text-left{text-align:left}}</style></head>
+<body>
+
+    <!-- Boton Flotante Chat -->
+    <div id="chat-trigger" onclick="toggleChat()">
+        <i class="fas fa-robot text-2xl"></i>
+    </div>
+
+    <!-- Contenedor del ChatBot -->
+    <div id="chatbot-container" style="display: none;">
+        <div class="chat-header text-cyan-400 font-tech text-[10px] flex justify-between items-center tracking-wider uppercase">
+            <span>BYTECORE ASISTENTE</span>
+            <button onclick="toggleChat()" class="text-white hover:text-cyan-400">×</button>
+        </div>
+        <div class="chat-box" id="chat-box"><div class="msg bot">¡Hola! Soy el asistente virtual de ByteCore. ¿En qué puedo ayudarte?</div><div class="msg user">precio de las botas</div><div class="msg bot">Botas: 1400 a 2300 bs aprox.</div></div>
+        <div class="chat-input">
+            <input type="text" id="chat-input-field" placeholder="Consulta precios, ubicación o horarios..." onkeypress="if(event.key === 'Enter') sendMsg()">
+            <button onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+
+
+    <div id="adminPanel" class="glass-morphism p-6 rounded-2xl" style="display: none;">
+        <h3 class="font-tech text-sm text-cyan-400 mb-4 uppercase">Rutas de Archivos Locales</h3>
+        <p class="text-[9px] text-gray-400 mb-4 leading-tight italic">Escribe el nombre o ruta del archivo (ej: assets/imagen.jpg). El HTML buscará el archivo en esa ubicación en tu servidor o disco.</p>
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block text-[10px] text-gray-400 uppercase mb-1">Ruta Logo Principal</label>
+                <input type="text" placeholder="img/logo.png" class="input-path" oninput="updatePath('img-logo-nav', this.value)">
+            </div>
+            <div>
+                <label class="block text-[10px] text-gray-400 uppercase mb-1">Ruta Catálogo PDF</label>
+                <input type="text" id="pdf-path-input" placeholder="docs/catalogo.pdf" class="input-path">
+            </div>
+            <hr class="border-white/10">
+            <h4 class="text-[10px] text-cyan-400 font-tech uppercase">Inicio</h4>
+            <div>
+                <label class="block text-[10px] text-gray-400 uppercase mb-1">Ruta Video MP4</label>
+                <input type="text" id="video-path-input" placeholder="video/gaming.mp4" class="input-path" oninput="updateVideo(this.value)">
+            </div>
+            <div>
+                <label class="block text-[10px] text-gray-400 uppercase mb-1">Ruta Fondo Hero</label>
+                <input type="text" placeholder="img/hero.jpg" class="input-path" oninput="updatePath('img-hero-bg', this.value)">
+            </div>
+
+            <hr class="border-white/10">
+            <h4 class="text-[10px] text-cyan-400 font-tech uppercase">Computación</h4>
+            <div>
+                <label class="block text-[10px] text-gray-400 uppercase mb-1">Ruta Imagen Gabinetes</label>
+                <input type="text" class="input-path" oninput="updatePath('img-prod-case', this.value)">
+            </div>
+            <div>
+                <label class="block text-[10px] text-gray-400 uppercase mb-1">Ruta Imagen Monitores</label>
+                <input type="text" class="input-path" oninput="updatePath('img-prod-monitor', this.value)">
+            </div>
+
+            <hr class="border-white/10">
+            <h4 class="text-[10px] text-cyan-400 font-tech uppercase">E.P.P. (Botas)</h4>
+            <div><input type="text" placeholder="Botas 1" class="input-path" oninput="updatePath('img-botas-1', this.value)"></div>
+            <div><input type="text" placeholder="Botas 2" class="input-path" oninput="updatePath('img-botas-2', this.value)"></div>
+            <div><input type="text" placeholder="Botas 3" class="input-path" oninput="updatePath('img-botas-3', this.value)"></div>
+            <div><input type="text" placeholder="Botas 4" class="input-path" oninput="updatePath('img-botas-4', this.value)"></div>
+            <div>
+                <label class="block text-[10px] text-gray-400 uppercase mb-1">Ruta EPP General</label>
+                <input type="text" class="input-path" oninput="updatePath('img-epp-general', this.value)">
+            </div>
+
+            <hr class="border-white/10">
+            <h4 class="text-[10px] text-cyan-400 font-tech uppercase">Pagos y Otros</h4>
+            <div>
+                <label class="block text-[10px] text-gray-400 uppercase mb-1">Ruta Imagen Envíos</label>
+                <input type="text" class="input-path" placeholder="img/envios.jpg" oninput="updatePath('img-envios', this.value)">
+            </div>
+            <div>
+                <label class="block text-[10px] text-gray-400 uppercase mb-1">Ruta QR Pago</label>
+                <input type="text" class="input-path" oninput="updatePath('img-qr-pago', this.value)">
+            </div>
+            <div>
+                <label class="block text-[10px] text-gray-400 uppercase mb-1">Ruta Laboratorio</label>
+                <input type="text" class="input-path" oninput="updatePath('img-lab', this.value)">
+            </div>
+            
+            <button onclick="exportHTML()" class="w-full py-3 bg-cyan-600/20 text-cyan-400 text-[10px] font-tech rounded border border-cyan-600/50 hover:bg-cyan-600 hover:text-white transition uppercase mt-4">
+                <i class="fas fa-save mr-2"></i> Guardar Cambios en HTML
+            </button>
+        </div>
+    </div>
+
+    <!-- Navegacion -->
+    <header class="fixed w-full z-50 glass-morphism top-0 h-[80px] flex items-center">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <img id="img-logo-nav" class="h-16 w-auto" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\logo 2.png" alt="Logo">
+            </div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium uppercase tracking-widest">
+                <a href="#inicio" class="hover:text-cyan-400 transition">Inicio</a>
+                <a href="#computacion" class="hover:text-cyan-400 transition">Computación</a>
+                <a href="#epp" class="hover:text-cyan-400 transition">E.P.P.</a>
+                <a href="#envios" class="hover:text-cyan-400 transition">Envíos</a>
+                <a href="#contacto" class="hover:text-cyan-400 transition">Contacto</a>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2">
+                <a href="https://wa.me/59167246013" target="_blank" class="bg-green-600 hover:bg-green-500 p-2 px-3 rounded-full transition flex items-center gap-2 text-[10px]">
+                    <i class="fab fa-whatsapp"></i> <span>67246013</span>
+                </a>
+                <a href="https://wa.me/59167248455" target="_blank" class="bg-green-700 hover:bg-green-600 p-2 px-3 rounded-full transition flex items-center gap-2 text-[10px]">
+                    <i class="fab fa-whatsapp"></i> <span>67248455</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="relative min-h-[calc(100vh-80px)] flex items-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img id="img-hero-bg" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\portada.png" alt="Fondo" class="hero-bg-img w-full h-full">
+            <div class="absolute inset-0 bg-black/60"></div>
+        </div>
+        <div class="container mx-auto px-6 relative z-10 flex justify-end text-right">
+            <div class="max-w-3xl">
+                <h1 class="text-5xl md:text-8xl font-tech font-bold mb-6 leading-tight">
+                    <span class="gradient-text">TECNOLOGÍA</span> <br>&amp; SEGURIDAD
+                </h1>
+                <p class="text-gray-200 text-lg mb-8 ml-auto max-w-lg">Hardware gaming de alto nivel y equipo de protección personal certificado. Entregas en Oruro y Bolivia.</p>
+                <div class="flex flex-wrap gap-4 justify-end">
+                    <button onclick="downloadCatalog()" class="glass-morphism px-8 py-4 rounded-full font-bold uppercase text-xs tracking-widest border border-cyan-500/50 hover:bg-cyan-500/10 transition">
+                        Catálogo PDF
+                    </button>
+                    <a href="#contacto" class="btn-primary px-10 py-4 rounded-full font-bold text-black uppercase text-xs tracking-widest">
+                        Donde estamos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Computacion -->
+    <section id="computacion" class="py-20 bg-slate-900/20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-tech font-bold uppercase mb-12 text-white">HARDWARE <span class="text-cyan-400">GAMING</span></h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 group relative rounded-[2rem] overflow-hidden neon-border video-wrapper">
+                    <video id="video-gaming" autoplay="" muted="" loop="" playsinline="" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\bite corto.mp4"></video>
+                    <div id="video-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-500 font-tech text-[10px] bg-black z-10" style="display: none;">
+                        <i class="fas fa-video mb-4 text-3xl text-cyan-400/30"></i>
+                        <span class="px-6 text-center tracking-widest">INDICA LA RUTA DEL VIDEO EN EL PANEL</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 gap-6">
+                    <div class="h-[188px] overflow-hidden rounded-3xl glass-morphism p-2 flex items-center justify-center">
+                        <img id="img-prod-case" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\cace.png" alt="Gabinete" class="img-full">
+                    </div>
+                    <div class="h-[188px] overflow-hidden rounded-3xl glass-morphism p-2 flex items-center justify-center">
+                        <img id="img-prod-monitor" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\monitor.png" alt="Monitor" class="img-full">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EPP con Slider de Botas -->
+    <section id="epp" class="py-20 bg-black">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-tech font-bold text-yellow-500 uppercase text-center mb-16">Seguridad Industrial</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="relative min-h-[400px] overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-white/5">
+                    <div class="slider-container" id="botas-slider">
+                        <div class="slide">
+                            <img id="img-botas-1" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\1.png" alt="Botas 1" class="img-full">
+                        </div>
+                        <div class="slide">
+                            <img id="img-botas-2" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\2.pmg" alt="Botas 2" class="img-full">
+                        </div>
+                        <div class="slide active">
+                            <img id="img-botas-3" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\3.png" alt="Botas 3" class="img-full">
+                        </div>
+                        <div class="slide">
+                            <img id="img-botas-4" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\4.png" alt="Botas 4" class="img-full">
+                        </div>
+                    </div>
+                </div>
+                <div class="relative min-h-[400px] flex items-center justify-center overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-white/5 p-4">
+                    <img id="img-epp-general" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\equipo de altura.png" alt="EPP" class="img-full">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Laboratorio Técnico -->
+    <section class="py-20">
+        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="rounded-[3rem] overflow-hidden neon-border h-[400px] flex items-center justify-center bg-black">
+                <img id="img-lab" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\jordi.png" alt="Laboratorio" class="img-full">
+            </div>
+            <div>
+                <h2 class="text-4xl font-tech font-bold mb-6 text-cyan-400 uppercase">Soporte Técnico</h2>
+                <p class="text-gray-300 text-lg">Especialistas en armado de PC Master Race y mantenimiento preventivo de equipos computacionales.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Envíos y Pagos QR -->
+    <section id="envios" class="py-20 bg-slate-900/10 border-t border-white/5">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+                <div class="lg:col-span-1 text-center lg:text-left">
+                    <h2 class="text-4xl font-tech font-bold uppercase text-cyan-400 mb-6">Envíos a toda Bolivia</h2>
+                    <p class="text-gray-300 mb-8">Despachos diarios desde Oruro hacia el resto del país con total seguridad.</p>
+                    <div class="glass-morphism p-6 rounded-3xl border border-cyan-500/30 inline-flex flex-col items-center">
+                        <i class="fas fa-qrcode text-4xl text-cyan-400 mb-4"></i>
+                        <h4 class="font-tech text-sm mb-4 uppercase tracking-wider">Aceptamos pagos por QR</h4>
+                        <div class="w-48 h-48 bg-white p-2 rounded-xl overflow-hidden mb-4">
+                            <img id="img-qr-pago" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\qr.png" alt="QR Pago" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-2 rounded-[2.5rem] overflow-hidden neon-border h-[450px] flex items-center justify-center bg-black">
+                    <img id="img-envios" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\envios.png" alt="Envios" class="img-full">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacto -->
+    <section id="contacto" class="py-20 border-t border-white/10">
+        <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div class="glass-morphism p-10 rounded-[3rem]">
+                <h3 class="font-tech text-2xl text-cyan-400 mb-6 uppercase">ByteCore Profesional</h3>
+                <div class="space-y-4 text-sm mb-8">
+                    <div class="flex justify-between border-b border-white/5 pb-2">
+                        <span class="text-gray-400 uppercase">Horario Lun-Vie</span>
+                        <span class="font-bold">08:30 - 19:00</span>
+                    </div>
+                    <div class="flex justify-between border-b border-white/5 pb-2">
+                        <span class="text-gray-400 uppercase">Horario Sábado</span>
+                        <span class="font-bold text-cyan-400">08:30 - 14:00</span>
+                    </div>
+                    <div class="flex justify-between border-b border-white/5 pb-2">
+                        <span class="text-gray-400 uppercase">Ubicación</span>
+                        <span class="font-bold">Av. Héroes del Chaco entre Beni y Pagador</span>
+                    </div>
+                    <div class="flex justify-between border-b border-white/5 pb-2">
+                        <span class="text-gray-400 uppercase">Referencias</span>
+                        <span class="font-bold">67246013 - 67248455</span>
+                    </div>
+                </div>
+            </div>
+            <div class="rounded-[3rem] overflow-hidden neon-border h-[400px]">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15089.47167664407!2d-67.114757!3d-17.961678!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTfCsDU3JzA3Ljg0IlMgNjfCsDA2JzIwLjc4Ilc!5e0!3m2!1ses!2sbo!4v1714220000000!5m2!1ses!2sbo" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 bg-black text-center text-[10px] uppercase font-tech text-gray-600">
+        ByteCore Profesional © 2024 | Oruro - Bolivia
+    </footer>
+
+    <!-- Almacenamiento oculto de rutas para persistencia en exportacion -->
+    <div id="data-paths" style="display:none;" data-pdf="docs/catalogo.pdf" data-video="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\bite corto.mp4"></div>
+
+    <script>
+        const videoEl = document.getElementById('video-gaming');
+        const vPlaceholder = document.getElementById('video-placeholder');
+
+        // Lógica del Slider
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        function showSlide(index) {
+            slides.forEach((s, i) => s.classList.toggle('active', i === index));
+        }
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }, 4000);
+
+        // Actualizar Rutas en tiempo real
+        function updatePath(id, value) {
+            if(!value) return;
+            const el = document.getElementById(id);
+            if(el) el.src = value;
+        }
+
+        function updateVideo(value) {
+            if(!value) return;
+            vPlaceholder.style.display = 'none';
+            videoEl.src = value;
+            videoEl.load();
+            const playPromise = videoEl.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Reproducción automática esperando interacción o error de ruta.");
+                });
+            }
+        }
+
+        function downloadCatalog() {
+            const path = document.getElementById('pdf-path-input').value || 
+                         document.getElementById('data-paths').getAttribute('data-pdf');
+            if(path) {
+                window.open(path, '_blank');
+            } else {
+                alert("Ruta de catálogo no definida.");
+            }
+        }
+
+        function toggleAdminPanel() {
+            const p = document.getElementById('adminPanel');
+            p.style.display = p.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function exportHTML() {
+            // Persistencia de PDF
+            const pdfVal = document.getElementById('pdf-path-input').value;
+            if(pdfVal) document.getElementById('data-paths').setAttribute('data-pdf', pdfVal);
+            
+            // Persistencia de Video
+            const videoVal = document.getElementById('video-path-input').value;
+            if(videoVal) {
+                document.getElementById('data-paths').setAttribute('data-video', videoVal);
+                // Inyectamos la ruta directamente en el src del video para el archivo exportado
+                document.getElementById('video-gaming').src = videoVal;
+            }
+
+            document.getElementById('adminPanel').style.display = 'none';
+            const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "ByteCore_Final.html";
+            a.click();
+            alert("Archivo guardado. Si el video no carga, asegúrate de que el archivo .mp4 esté en la carpeta correcta junto al HTML.");
+        }
+
+        /* --- CHATBOT --- */
+        function toggleChat() {
+            const c = document.getElementById('chatbot-container');
+            c.style.display = c.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function botMsg(m) {
+            const box = document.getElementById("chat-box");
+            box.innerHTML += `<div class='msg bot'>${m}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function sendMsg() {
+            const inp = document.getElementById("chat-input-field");
+            const rawText = inp.value.trim();
+            if(!rawText) return;
+            document.getElementById("chat-box").innerHTML += `<div class='msg user'>${rawText}</div>`;
+            const val = rawText.toLowerCase();
+            inp.value = "";
+            setTimeout(() => {
+                let r = "Para una mejor atención, comunícate con nuestros asesores.";
+                if (val.includes("hola")) r = "¡Hola! ¿En qué puedo ayudarte? Consultame sobre precios o ubicación.";
+                else if (val.includes("bota")) r = "Botas: 1400 a 2300 bs aprox.";
+                else if (val.includes("ubicacion") || val.includes("donde")) r = "Estamos en Av. Héroes del Chaco entre Beni y Pagador, Oruro.";
+                botMsg(r);
+            }, 600);
+        }
+
+        window.onload = () => {
+            botMsg("¡Hola! Soy el asistente virtual de ByteCore. ¿En qué puedo ayudarte?");
+            // Recuperar video guardado si existe
+            const savedVideo = document.getElementById('data-paths').getAttribute('data-video');
+            if(savedVideo) updateVideo(savedVideo);
+        };
+    </script>
+
+</body></html>
