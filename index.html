@@ -186,12 +186,12 @@
     </div>
 
     <!-- Contenedor del ChatBot -->
-    <div id="chatbot-container" style="display: none;">
+    <div id="chatbot-container">
         <div class="chat-header text-cyan-400 font-tech text-[10px] flex justify-between items-center tracking-wider uppercase">
             <span>BYTECORE ASISTENTE</span>
             <button onclick="toggleChat()" class="text-white hover:text-cyan-400">×</button>
         </div>
-        <div class="chat-box" id="chat-box"><div class="msg bot">¡Hola! Soy el asistente virtual de ByteCore. ¿En qué puedo ayudarte?</div><div class="msg user">precio de las botas</div><div class="msg bot">Botas: 1400 a 2300 bs aprox.</div></div>
+        <div class="chat-box" id="chat-box"><div class="msg bot">¡Hola! Soy el asistente virtual de ByteCore. ¿En qué puedo ayudarte?</div></div>
         <div class="chat-input">
             <input type="text" id="chat-input-field" placeholder="Consulta precios, ubicación o horarios..." onkeypress="if(event.key === 'Enter') sendMsg()">
             <button onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
@@ -350,7 +350,7 @@
                             <img id="img-botas-1" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\1.png" alt="Botas 1" class="img-full">
                         </div>
                         <div class="slide">
-                            <img id="img-botas-2" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\2.pmg" alt="Botas 2" class="img-full">
+                            <img id="img-botas-2" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\2.png" alt="Botas 2" class="img-full">
                         </div>
                         <div class="slide active">
                             <img id="img-botas-3" src="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\3.png" alt="Botas 3" class="img-full">
@@ -437,7 +437,7 @@
     </footer>
 
     <!-- Almacenamiento oculto de rutas para persistencia en exportacion -->
-    <div id="data-paths" style="display:none;" data-pdf="docs/catalogo.pdf" data-video="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\bite corto.mp4"></div>
+    <div id="data-paths" style="display:none;" data-pdf="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\catalogo MAYO 2026 .pdf" data-video="D:\banner\UPDS\negocios dogitales\trabajo final\trabajo final\recursos\pagoina web\bite corto.mp4"></div>
 
     <script>
         const videoEl = document.getElementById('video-gaming');
